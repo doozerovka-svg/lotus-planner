@@ -61,6 +61,20 @@ const StatsDashboard = () => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (completionRate / 100) * circumference;
 
+  // Karma Rank calculations
+  const karmaPoints = (completedTasks * 10) + (tasks.filter(t => t.completed && t.tags.includes('Lotus Blossom')).length * 20);
+  
+  const getRank = (points) => {
+    if (points >= 1000) return { name: 'Zen Planner 🧘‍♂️', next: 'Max Level', cap: 1000, req: 1000 };
+    if (points >= 500) return { name: 'Focus Master ⚡', next: 'Zen Planner 🧘‍♂️', cap: 1000, req: 500 };
+    if (points >= 200) return { name: 'Blooming Bud 🌸', next: 'Focus Master ⚡', cap: 500, req: 200 };
+    if (points >= 50) return { name: 'Rising Sprout 🌱', next: 'Blooming Bud 🌸', cap: 200, req: 50 };
+    return { name: 'Lotus Seedling 🌰', next: 'Rising Sprout 🌱', cap: 50, req: 0 };
+  };
+
+  const rank = getRank(karmaPoints);
+  const rankProgress = rank.next === 'Max Level' ? 100 : Math.round(((karmaPoints - rank.req) / (rank.cap - rank.req)) * 100);
+
   // Mock past 7 days completion for vertical bar chart
   const getPast7Days = () => {
     const days = [];
@@ -93,6 +107,27 @@ const StatsDashboard = () => {
       </header>
 
       <div className="stats-scroll-container">
+        {/* Karma Progress Card */}
+        <div className="karma-rank-card">
+          <div className="karma-header">
+            <div className="karma-title-wrapper">
+              <span className="rank-emoji">🏆</span>
+              <div>
+                <h4>Productivity Level: {rank.name}</h4>
+                <p className="rank-points">{karmaPoints} Karma Points</p>
+              </div>
+            </div>
+            <span className="streak-badge">🔥 {completedTodayCount > 0 ? 'Active Streak!' : 'Complete a task today!'}</span>
+          </div>
+          <div className="karma-progress-track">
+            <div className="karma-progress-bar" style={{ width: `${rankProgress}%` }}></div>
+          </div>
+          <div className="karma-footer">
+            <span>Progress to {rank.next}: {rankProgress}%</span>
+            <span>{karmaPoints} / {rank.cap} pts</span>
+          </div>
+        </div>
+
         {/* KPI Grid */}
         <div className="kpi-grid">
           <div className="kpi-card">

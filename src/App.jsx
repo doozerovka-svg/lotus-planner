@@ -5,6 +5,7 @@ import TaskDetails from './components/TaskDetails';
 import LotusBlossom from './components/LotusBlossom';
 import StatsDashboard from './components/StatsDashboard';
 import Settings from './components/Settings';
+import EisenhowerMatrix from './components/EisenhowerMatrix';
 import { 
   getTasks, 
   saveTasks, 
@@ -166,6 +167,18 @@ const App = () => {
         return <StatsDashboard />;
       case 'settings':
         return <Settings />;
+      case 'matrix':
+        return (
+          <EisenhowerMatrix
+            tasks={tasks}
+            projects={projects}
+            toggleTaskComplete={handleToggleTaskComplete}
+            deleteTask={handleDeleteTask}
+            updateTask={handleUpdateTask}
+            addTask={handleAddTask}
+            setMobileOpen={setMobileOpen}
+          />
+        );
       default:
         // Inbox, Today, Upcoming, Someday, Completed, or Project lists
         return (
@@ -177,6 +190,7 @@ const App = () => {
             addTask={handleAddTask}
             toggleTaskComplete={handleToggleTaskComplete}
             deleteTask={handleDeleteTask}
+            updateTask={handleUpdateTask}
             setSelectedTask={setSelectedTask}
             setMobileOpen={setMobileOpen}
           />

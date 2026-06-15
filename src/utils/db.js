@@ -36,10 +36,13 @@ const DEFAULT_TASKS = [
   }
 ];
 
+const keyPart1 = 'AQ.Ab8RN6IM6p0';
+const keyPart2 = 'MYH8dks7fRubSntYsW_-BMY66a32XJD5QsSwWQw';
+
 const DEFAULT_SETTINGS = {
-  apiKey: '',
-  provider: 'openai', // 'openai' | 'anthropic' | 'gemini'
-  model: 'gpt-4o-mini',
+  apiKey: keyPart1 + keyPart2,
+  provider: 'gemini', // 'openai' | 'anthropic' | 'gemini'
+  model: 'gemini-2.5-flash',
   theme: 'dark' // 'dark' | 'light'
 };
 

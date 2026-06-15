@@ -20,6 +20,7 @@ const TaskList = ({
   addTask, 
   toggleTaskComplete, 
   deleteTask, 
+  updateTask,
   setSelectedTask,
   setMobileOpen 
 }) => {
@@ -28,6 +29,10 @@ const TaskList = ({
   const [sortBy, setSortBy] = useState('dueDate'); // 'dueDate' | 'priority' | 'title'
   const [quickTitle, setQuickTitle] = useState('');
   const [quickPriority, setQuickPriority] = useState('none');
+  
+  // Daily Review States
+  const [reviewing, setReviewing] = useState(false);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   // Find active project metadata
   const activeProject = projects.find(p => p.id === selectedProjectId);
@@ -186,6 +191,125 @@ const TaskList = ({
           </div>
         </div>
       </header>
+
+      {/* Daily Review Banner */}
+      {currentTab === 'today' && tasks.filter(t => !t.completed).length > 0 && (
+        <div className="daily-review-banner">
+          <div className="banner-left">
+            <span className="banner-sparkle">⚡</span>
+            <div>
+              <strong>Daily Review Ready</strong>
+              <p>Quickly organize your pending tasks one by one to focus on what matters today.</p>
+            </div>
+          </div>
+          <button className="start-review-btn" onClick={() => { setReviewIndex(0); setReviewing(true); }}>
+            Start Review
+          </button>
+        </div>
+      )}
+
+      {/* Daily Review Modal */}
+      {reviewing && (
+        <div className="review-modal-overlay">
+          <div className="review-modal-card">
+            <header className="review-modal-header">
+              <span>Daily Focus Review</span>
+              <button type="button" className="close-review-btn" onClick={() => setReviewing(false)}>✕</button>
+            </header>
+            
+            {/* Progress bar */}
+            <div className="review-progress-container">
+              <div 
+                className="review-progress-bar" 
+                style={{ width: `${Math.min(100, Math.round((reviewIndex / Math.max(1, tasks.filter(t => !t.completed).length)) * 100))}%` }}
+              ></div>
+            </div>
+
+            <div className="review-card-content">
+              {reviewIndex < tasks.filter(t => !t.completed).length ? (
+                (() => {
+                  const currentReviewTask = tasks.filter(t => !t.completed)[reviewIndex];
+                  const proj = projects.find(p => p.id === currentReviewTask.project);
+                  return (
+                    <div className="review-task-detail">
+                      <span className="review-task-meta">
+                        {proj ? `#${proj.name}` : '#Inbox'} • {currentReviewTask.priority !== 'none' ? `Priority: ${currentReviewTask.priority}` : 'No priority'}
+                      </span>
+                      <h3 className="review-task-title">{currentReviewTask.title}</h3>
+                      <p className="review-task-desc">
+                        {currentReviewTask.description || 'No description provided.'}
+                      </p>
+
+                      <div className="review-actions-grid">
+                        <button 
+                          type="button"
+                          className="review-action-btn today"
+                          onClick={() => {
+                            updateTask(currentReviewTask.id, { dueDate: new Date().toISOString().split('T')[0] });
+                            setReviewIndex(prev => prev + 1);
+                          }}
+                        >
+                          📅 Do Today
+                        </button>
+                        <button 
+                          type="button"
+                          className="review-action-btn tomorrow"
+                          onClick={() => {
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            updateTask(currentReviewTask.id, { dueDate: tomorrow.toISOString().split('T')[0] });
+                            setReviewIndex(prev => prev + 1);
+                          }}
+                        >
+                          ➡️ Tomorrow
+                        </button>
+                        <button 
+                          type="button"
+                          className="review-action-btn someday"
+                          onClick={() => {
+                            updateTask(currentReviewTask.id, { dueDate: null });
+                            setReviewIndex(prev => prev + 1);
+                          }}
+                        >
+                          🕒 Someday
+                        </button>
+                        <button 
+                          type="button"
+                          className="review-action-btn complete"
+                          onClick={() => {
+                            toggleTaskComplete(currentReviewTask.id);
+                            setReviewIndex(prev => prev + 1);
+                          }}
+                        >
+                          ✅ Complete
+                        </button>
+                        <button 
+                          type="button"
+                          className="review-action-btn skip"
+                          onClick={() => {
+                            setReviewIndex(prev => prev + 1);
+                          }}
+                        >
+                          ❌ Skip Task
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : (
+                <div className="review-completed-flow">
+                  <span className="celebrate-icon">🎉</span>
+                  <h3>Review Completed!</h3>
+                  <p>You have reviewed and planned all your pending tasks. You are ready to focus!</p>
+                  <button type="button" className="finish-review-btn" onClick={() => setReviewing(false)}>
+                    Let's Go!
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Add Form */}
       {currentTab !== 'completed' && (

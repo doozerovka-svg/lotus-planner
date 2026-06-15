@@ -12,7 +12,8 @@ import {
   Plus, 
   Menu, 
   X,
-  Trash2
+  Trash2,
+  LayoutGrid
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -35,6 +36,7 @@ const Sidebar = ({
     { id: 'today', label: 'Today', icon: Calendar },
     { id: 'upcoming', label: 'Upcoming', icon: CalendarDays },
     { id: 'someday', label: 'Someday', icon: Clock },
+    { id: 'matrix', label: 'Eisenhower Matrix', icon: LayoutGrid },
     { id: 'completed', label: 'Completed', icon: CheckCircle2 },
   ];
 

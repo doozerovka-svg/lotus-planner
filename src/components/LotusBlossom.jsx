@@ -356,6 +356,41 @@ const LotusBlossom = () => {
                   />
                 </div>
 
+                {/* Templates Selector */}
+                <div className="templates-selector-group">
+                  <span className="templates-label">Or choose a quick template:</span>
+                  <div className="templates-grid">
+                    <button 
+                      type="button" 
+                      className="template-chip"
+                      onClick={() => setGoalInput('Launch a SaaS Startup')}
+                    >
+                      🚀 Launch SaaS
+                    </button>
+                    <button 
+                      type="button" 
+                      className="template-chip"
+                      onClick={() => setGoalInput('Master Conversational Spanish')}
+                    >
+                      📚 Learn Spanish
+                    </button>
+                    <button 
+                      type="button" 
+                      className="template-chip"
+                      onClick={() => setGoalInput('Plan a 14-day Japan Vacation')}
+                    >
+                      ✈️ Japan Travel
+                    </button>
+                    <button 
+                      type="button" 
+                      className="template-chip"
+                      onClick={() => setGoalInput('12-Week Gym Fitness Routine')}
+                    >
+                      🏋️‍♂️ Gym Routine
+                    </button>
+                  </div>
+                </div>
+
                 <div className="wizard-actions">
                   <button type="button" className="cancel-btn" onClick={() => setIsCreating(false)}>
                     Cancel

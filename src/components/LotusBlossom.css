@@ -675,3 +675,54 @@
   background-color: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.4);
 }
+
+/* Mobile responsive fixes to prevent buttons from overflowing */
+@media (max-width: 600px) {
+  .lotus-scroll-container {
+    padding: 12px;
+  }
+  .lotus-cell {
+    padding: 8px 6px;
+    border-radius: var(--border-radius-sm);
+  }
+  .cell-text {
+    font-size: 10px;
+    -webkit-line-clamp: 2;
+    line-height: 1.25;
+    margin: 2px 0;
+  }
+  .cell-checkbox {
+    height: 14px;
+  }
+  .cell-checkbox input {
+    width: 12px;
+    height: 12px;
+  }
+  .zoom-in-btn, .decompose-deep-btn {
+    font-size: 8px;
+    padding: 2px 4px;
+    line-height: 1;
+  }
+  .zoom-out-btn {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  .center-flower-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .lotus-grid-container {
+    max-width: 100%;
+  }
+  .lotus-controls {
+    width: 100%;
+  }
+  .control-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  .select-buttons button, .control-group select, .primary-btn, .danger-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+}

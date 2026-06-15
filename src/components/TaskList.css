@@ -384,3 +384,24 @@
   background-color: var(--bg-active);
   color: #ef4444;
 }
+
+/* Mobile responsive adjustments for search and filter buttons */
+@media (max-width: 600px) {
+  .search-wrapper input {
+    width: 120px;
+  }
+  .search-wrapper input:focus {
+    width: 140px;
+  }
+  .filter-select {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  .sort-wrapper select {
+    padding-left: 24px;
+  }
+  .task-row-right {
+    gap: 8px;
+    margin-left: 8px;
+  }
+}

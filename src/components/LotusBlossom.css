@@ -1,0 +1,677 @@
+/* LotusBlossom.css */
+
+.lotus-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.lotus-header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.back-btn:hover {
+  color: var(--text-primary);
+}
+
+.create-lotus-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.create-lotus-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.lotus-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .lotus-scroll-container {
+    padding: 16px;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* Goals Grid */
+.goals-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.goal-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.goal-card:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-card-hover);
+}
+
+.goal-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.goal-card-icon {
+  color: var(--accent-color);
+}
+
+.goal-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.goal-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.delete-goal-btn {
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: var(--border-radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.delete-goal-btn:hover {
+  background-color: var(--bg-active);
+  color: #ef4444;
+}
+
+/* Wizard */
+.create-lotus-wizard {
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.wizard-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wizard-header h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.wizard-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.input-group input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-app);
+  outline: none;
+  font-size: 14px;
+  transition: border-color var(--transition-fast);
+}
+
+.input-group input:focus {
+  border-color: var(--accent-color);
+}
+
+.wizard-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-secondary);
+}
+
+.cancel-btn:hover {
+  background-color: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: var(--border-radius-sm);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Agent Thinking Overlay Console */
+.agent-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.agent-log-card {
+  width: 100%;
+  max-width: 650px;
+  background-color: #0c0c0e;
+  border: 1px solid #27272a;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+}
+
+.agent-log-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1f1f23;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fafafa;
+}
+
+.agent-log-console {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: #a1a1aa;
+}
+
+.log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 2px solid #27272a;
+  padding-left: 12px;
+}
+
+.log-entry.thinking {
+  border-color: var(--accent-color);
+}
+
+.log-entry.success {
+  border-color: #10b981;
+}
+
+.log-entry.warning {
+  border-color: #f59e0b;
+}
+
+.log-entry.error {
+  border-color: #ef4444;
+}
+
+.log-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.log-agent {
+  font-weight: 700;
+  color: #e4e4e7;
+}
+
+.log-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.log-badge.thinking {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.log-badge.success {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.log-badge.warning {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.log-badge.error {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.log-text {
+  color: #e4e4e7;
+}
+
+.log-data-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+  color: #38bdf8;
+}
+
+/* Active Lotus Workspace */
+.active-lotus-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lotus-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.crumb-btn {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.crumb-btn:hover {
+  color: var(--text-primary);
+}
+
+.crumb-btn.active {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.crumb-arrow {
+  color: var(--text-muted);
+}
+
+.lotus-workspace {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+  .lotus-workspace {
+    flex-direction: column;
+  }
+}
+
+/* 3x3 Grid Layout */
+.lotus-grid-container {
+  flex: 1;
+  max-width: 600px;
+  width: 100%;
+}
+
+.lotus-grid-3x3 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.lotus-grid-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.lotus-cell {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  aspect-ratio: 1 / 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
+}
+
+.lotus-cell:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-card-hover);
+}
+
+.lotus-cell.selected {
+  border-color: var(--accent-color);
+  background-color: var(--accent-light);
+}
+
+/* Center Cell Specifics */
+.center-cell {
+  background-color: var(--bg-active);
+  border-color: var(--accent-color);
+  cursor: default;
+}
+
+.center-cell:hover {
+  background-color: var(--bg-active);
+  border-color: var(--accent-color);
+}
+
+.center-cell .cell-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  gap: 8px;
+}
+
+.center-flower-icon {
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.4));
+}
+
+.zoom-out-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.zoom-out-btn:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-active);
+}
+
+/* Petal Cell Specifics */
+.petal-cell.exported {
+  background-color: var(--bg-sidebar);
+  border-color: var(--border-color);
+  opacity: 0.85;
+}
+
+.petal-cell.has-child {
+  border-style: dashed;
+}
+
+.cell-checkbox {
+  height: 16px;
+}
+
+.cell-checkbox input {
+  cursor: pointer;
+}
+
+.cell-text {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.cell-actions {
+  display: flex;
+  justify-content: center;
+  height: 20px;
+}
+
+.zoom-in-btn, .decompose-deep-btn {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-active);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.zoom-in-btn:hover, .decompose-deep-btn:hover {
+  background-color: var(--border-hover);
+}
+
+.decompose-deep-btn {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.decompose-deep-btn:hover {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.exported-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  color: #10b981;
+}
+
+/* Controls Panel */
+.lotus-controls {
+  width: 320px;
+}
+
+@media (max-width: 992px) {
+  .lotus-controls {
+    width: 100%;
+  }
+}
+
+.control-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.control-card h4 {
+  font-size: 15px;
+}
+
+.control-card h5 {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.select-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.secondary-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  flex: 1;
+}
+
+.secondary-btn:hover {
+  background-color: var(--bg-active);
+  border-color: var(--border-hover);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-group select {
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-app);
+  outline: none;
+  cursor: pointer;
+}
+
+.primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: var(--border-radius-sm);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.danger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 16px;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  background-color: rgba(239, 68, 68, 0.05);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.danger-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+}

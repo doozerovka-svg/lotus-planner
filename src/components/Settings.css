@@ -1,0 +1,225 @@
+/* Settings.css */
+
+.settings-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.settings-header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.settings-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  max-width: 650px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .settings-scroll-container {
+    padding: 16px;
+  }
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settings-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-card h4 {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: -8px;
+}
+
+/* Theme toggle */
+.theme-toggle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.theme-btn:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.theme-btn.active {
+  border-color: var(--accent-color);
+  background-color: var(--accent-light);
+  color: var(--accent-color);
+}
+
+/* Form Groups */
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-group label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.settings-group select {
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.settings-group select:focus {
+  border-color: var(--accent-color);
+}
+
+/* API Key Input */
+.api-key-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.key-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+}
+
+.api-key-input-wrapper input {
+  width: 100%;
+  font-size: 13px;
+  padding: 8px 36px 8px 32px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.api-key-input-wrapper input:focus {
+  border-color: var(--accent-color);
+}
+
+.show-key-btn {
+  position: absolute;
+  right: 10px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.show-key-btn:hover {
+  color: var(--text-secondary);
+}
+
+.api-key-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Buttons */
+.save-settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: var(--border-radius-sm);
+  align-self: flex-start;
+  transition: background-color var(--transition-fast);
+  min-width: 180px;
+}
+
+.save-settings-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Danger card */
+.danger-card {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.danger-text {
+  color: #ef4444;
+}
+
+.reset-db-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--border-radius-sm);
+  align-self: flex-start;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.reset-db-btn:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}

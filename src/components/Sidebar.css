@@ -8,6 +8,8 @@
   display: flex;
   flex-direction: column;
   padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   flex-shrink: 0;
 }
 
@@ -41,6 +43,8 @@
   transform: translateX(-100%);
   transition: transform var(--transition-normal);
   padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   z-index: 1002;

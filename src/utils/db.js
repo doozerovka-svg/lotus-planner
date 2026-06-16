@@ -102,15 +102,31 @@ export const saveProjects = (projects) => {
 
 export const getSettings = () => {
   const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-  if (!data) {
+  let parsed = {};
+  if (data) {
+    try {
+      parsed = JSON.parse(data);
+    } catch (e) {
+      parsed = {};
+    }
+  } else {
     localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
     return DEFAULT_SETTINGS;
   }
-  return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+  
+  const finalSettings = { ...DEFAULT_SETTINGS, ...parsed };
+  if (finalSettings.provider === 'gemini' && !finalSettings.apiKey) {
+    finalSettings.apiKey = DEFAULT_SETTINGS.apiKey;
+  }
+  return finalSettings;
 };
 
 export const saveSettings = (settings) => {
-  localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+  const finalSettings = { ...settings };
+  if (finalSettings.provider === 'gemini' && !finalSettings.apiKey) {
+    finalSettings.apiKey = DEFAULT_SETTINGS.apiKey;
+  }
+  localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(finalSettings));
   window.dispatchEvent(new Event('settingsUpdated'));
 };
 

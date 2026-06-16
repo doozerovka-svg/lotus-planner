@@ -5,12 +5,13 @@ import {
   Clock, 
   AlertTriangle, 
   TrendingUp,
-  FolderOpen
+  FolderOpen,
+  Menu
 } from 'lucide-react';
 import { getTasks, getProjects } from '../utils/db';
 import './StatsDashboard.css';
 
-const StatsDashboard = () => {
+const StatsDashboard = ({ setMobileOpen }) => {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
 
@@ -101,6 +102,9 @@ const StatsDashboard = () => {
     <div className="stats-view">
       <header className="stats-header">
         <div className="header-left">
+          <button type="button" className="mobile-menu-trigger" onClick={() => setMobileOpen(true)}>
+            <Menu size={20} />
+          </button>
           <BarChart3 size={20} className="logo-icon" />
           <h2>Performance Stats</h2>
         </div>

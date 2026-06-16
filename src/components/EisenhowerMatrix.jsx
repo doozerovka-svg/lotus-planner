@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Circle, 
@@ -8,7 +8,12 @@ import {
   HelpCircle,
   Menu,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  ChevronsUp,
+  ChevronUp,
+  ChevronDown,
+  Minus,
+  Mic
 } from 'lucide-react';
 import './EisenhowerMatrix.css';
 
@@ -21,6 +26,45 @@ const EisenhowerMatrix = ({
   addTask,
   setMobileOpen 
 }) => {
+  const [listeningQ, setListeningQ] = useState(null);
+
+  const handleVoiceInput = (qNum) => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    if (listeningQ === qNum) {
+      setListeningQ(null);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = navigator.language || 'ru-RU';
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setListeningQ(qNum);
+    };
+
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      if (text) {
+        const inputEl = document.querySelector(`input[name="add-q-${qNum}"]`);
+        if (inputEl) {
+          inputEl.value = inputEl.value ? `${inputEl.value} ${text}` : text;
+        }
+      }
+    };
+
+    recognition.onerror = () => {
+      setListeningQ(null);
+    };
+
+    recognition.onend = () => {
+      setListeningQ(null);
+    };
+
+    recognition.start();
+  };
   
   // Helper to categorize tasks into quadrants
   // Q1: High Priority (Urgent & Important)
@@ -115,8 +159,30 @@ const EisenhowerMatrix = ({
           <input
             name={`add-q-${qNum}`}
             type="text"
-            placeholder="Add task to this quadrant..."
+            placeholder={listeningQ === qNum ? "Listening... Speak now..." : "Add task to this quadrant..."}
+            style={{ flex: 1 }}
           />
+          {typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition) && (
+            <button
+              type="button"
+              className={`mic-btn ${listeningQ === qNum ? 'listening' : ''}`}
+              onClick={() => handleVoiceInput(qNum)}
+              title="Voice Input"
+              style={{
+                padding: '4px',
+                color: listeningQ === qNum ? '#ef4444' : 'var(--text-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color var(--transition-fast)'
+              }}
+            >
+              <Mic size={14} className={listeningQ === qNum ? 'animate-pulse' : ''} />
+            </button>
+          )}
         </form>
 
         {/* Tasks List */}
@@ -136,7 +202,12 @@ const EisenhowerMatrix = ({
                   </button>
 
                   <div className="task-info">
-                    <span className="task-title">{task.title}</span>
+                    <span className="task-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {task.priority === 'high' && <ChevronsUp size={14} style={{ color: '#ef4444', flexShrink: 0 }} />}
+                      {task.priority === 'medium' && <ChevronUp size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />}
+                      {task.priority === 'low' && <ChevronDown size={14} style={{ color: '#3b82f6', flexShrink: 0 }} />}
+                      <span>{task.title}</span>
+                    </span>
                     {proj && (
                       <span className="task-proj" style={{ color: proj.color }}>
                         {proj.name}

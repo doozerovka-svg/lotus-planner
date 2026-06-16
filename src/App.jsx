@@ -162,11 +162,11 @@ const App = () => {
   const renderMainView = () => {
     switch (currentTab) {
       case 'lotus':
-        return <LotusBlossom />;
+        return <LotusBlossom setMobileOpen={setMobileOpen} />;
       case 'stats':
-        return <StatsDashboard />;
+        return <StatsDashboard setMobileOpen={setMobileOpen} />;
       case 'settings':
-        return <Settings />;
+        return <Settings setMobileOpen={setMobileOpen} />;
       case 'matrix':
         return (
           <EisenhowerMatrix

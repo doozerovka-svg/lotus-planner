@@ -8,7 +8,12 @@ import {
   ArrowUpDown, 
   Menu,
   CheckCircle2,
-  Circle
+  Circle,
+  ChevronsUp,
+  ChevronUp,
+  ChevronDown,
+  Minus,
+  Mic
 } from 'lucide-react';
 import './TaskList.css';
 
@@ -29,10 +34,57 @@ const TaskList = ({
   const [sortBy, setSortBy] = useState('dueDate'); // 'dueDate' | 'priority' | 'title'
   const [quickTitle, setQuickTitle] = useState('');
   const [quickPriority, setQuickPriority] = useState('none');
+  const [isListening, setIsListening] = useState(false);
+
+  const handleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = navigator.language || 'ru-RU';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      if (text) {
+        setQuickTitle(prev => prev ? `${prev} ${text}` : text);
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error', event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    if (isListening) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+  };
   
   // Daily Review States
   const [reviewing, setReviewing] = useState(false);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [swipeClass, setSwipeClass] = useState('');
+
+  const triggerSwipe = (actionFn, direction) => {
+    setSwipeClass(`swipe-${direction}`);
+    setTimeout(() => {
+      actionFn();
+      setSwipeClass('');
+      setReviewIndex(prev => prev + 1);
+    }, 200);
+  };
 
   // Find active project metadata
   const activeProject = projects.find(p => p.id === selectedProjectId);
@@ -231,7 +283,7 @@ const TaskList = ({
                   const currentReviewTask = tasks.filter(t => !t.completed)[reviewIndex];
                   const proj = projects.find(p => p.id === currentReviewTask.project);
                   return (
-                    <div className="review-task-detail">
+                    <div className={`review-task-detail ${swipeClass}`}>
                       <span className="review-task-meta">
                         {proj ? `#${proj.name}` : '#Inbox'} • {currentReviewTask.priority !== 'none' ? `Priority: ${currentReviewTask.priority}` : 'No priority'}
                       </span>
@@ -245,8 +297,9 @@ const TaskList = ({
                           type="button"
                           className="review-action-btn today"
                           onClick={() => {
-                            updateTask(currentReviewTask.id, { dueDate: new Date().toISOString().split('T')[0] });
-                            setReviewIndex(prev => prev + 1);
+                            triggerSwipe(() => {
+                              updateTask(currentReviewTask.id, { dueDate: new Date().toISOString().split('T')[0] });
+                            }, 'right');
                           }}
                         >
                           📅 Do Today
@@ -255,10 +308,11 @@ const TaskList = ({
                           type="button"
                           className="review-action-btn tomorrow"
                           onClick={() => {
-                            const tomorrow = new Date();
-                            tomorrow.setDate(tomorrow.getDate() + 1);
-                            updateTask(currentReviewTask.id, { dueDate: tomorrow.toISOString().split('T')[0] });
-                            setReviewIndex(prev => prev + 1);
+                            triggerSwipe(() => {
+                              const tomorrow = new Date();
+                              tomorrow.setDate(tomorrow.getDate() + 1);
+                              updateTask(currentReviewTask.id, { dueDate: tomorrow.toISOString().split('T')[0] });
+                            }, 'left');
                           }}
                         >
                           ➡️ Tomorrow
@@ -267,8 +321,9 @@ const TaskList = ({
                           type="button"
                           className="review-action-btn someday"
                           onClick={() => {
-                            updateTask(currentReviewTask.id, { dueDate: null });
-                            setReviewIndex(prev => prev + 1);
+                            triggerSwipe(() => {
+                              updateTask(currentReviewTask.id, { dueDate: null });
+                            }, 'down');
                           }}
                         >
                           🕒 Someday
@@ -277,8 +332,9 @@ const TaskList = ({
                           type="button"
                           className="review-action-btn complete"
                           onClick={() => {
-                            toggleTaskComplete(currentReviewTask.id);
-                            setReviewIndex(prev => prev + 1);
+                            triggerSwipe(() => {
+                              toggleTaskComplete(currentReviewTask.id);
+                            }, 'up');
                           }}
                         >
                           ✅ Complete
@@ -287,7 +343,7 @@ const TaskList = ({
                           type="button"
                           className="review-action-btn skip"
                           onClick={() => {
-                            setReviewIndex(prev => prev + 1);
+                            triggerSwipe(() => {}, 'skip');
                           }}
                         >
                           ❌ Skip Task
@@ -318,10 +374,28 @@ const TaskList = ({
             <Plus size={16} className="quick-add-plus" />
             <input
               type="text"
-              placeholder={`Add task to ${getHeaderTitle()}... (Press Enter)`}
+              placeholder={isListening ? "Listening... Speak now..." : `Add task to ${getHeaderTitle()}... (Press Enter)`}
               value={quickTitle}
               onChange={(e) => setQuickTitle(e.target.value)}
             />
+            {typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition) && (
+              <button
+                type="button"
+                className={`mic-btn ${isListening ? 'listening' : ''}`}
+                onClick={handleVoiceInput}
+                title="Voice Input"
+                style={{
+                  padding: '6px',
+                  color: isListening ? '#ef4444' : 'var(--text-muted)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'color var(--transition-fast)'
+                }}
+              >
+                <Mic size={16} className={isListening ? 'animate-pulse' : ''} />
+              </button>
+            )}
           </div>
 
           <div className="quick-add-actions">
@@ -405,7 +479,10 @@ const TaskList = ({
                   <div className="task-row-right" onClick={(e) => e.stopPropagation()}>
                     {task.priority !== 'none' && (
                       <span className={`priority-badge ${task.priority}`}>
-                        {task.priority}
+                        {task.priority === 'high' && <ChevronsUp size={12} />}
+                        {task.priority === 'medium' && <ChevronUp size={12} />}
+                        {task.priority === 'low' && <ChevronDown size={12} />}
+                        <span style={{ marginLeft: '4px' }}>{task.priority}</span>
                       </span>
                     )}
 

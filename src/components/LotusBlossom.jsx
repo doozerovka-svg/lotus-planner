@@ -11,13 +11,14 @@ import {
   Settings,
   HelpCircle,
   CheckCircle,
-  Play
+  Play,
+  Menu
 } from 'lucide-react';
 import { getLotusGrids, saveLotusGrids, addLotusGrid, updateLotusGrid, deleteLotusGrid, getProjects, addTask, getSettings } from '../utils/db';
 import { decomposeLotusTask } from '../utils/agents';
 import './LotusBlossom.css';
 
-const LotusBlossom = () => {
+const LotusBlossom = ({ setMobileOpen }) => {
   const [grids, setGrids] = useState([]);
   const [projects, setProjects] = useState([]);
   const [activeGridId, setActiveGridId] = useState(null); // Current focused 3x3 grid
@@ -243,6 +244,9 @@ const LotusBlossom = () => {
             </button>
           ) : (
             <>
+              <button type="button" className="mobile-menu-trigger" onClick={() => setMobileOpen(true)}>
+                <Menu size={20} />
+              </button>
               <Flower2 size={20} className="logo-icon" />
               <h2>Lotus Blossom Mind-Mapping</h2>
             </>

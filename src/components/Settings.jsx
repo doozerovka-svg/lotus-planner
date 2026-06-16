@@ -8,18 +8,20 @@ import {
   Sun, 
   Trash2, 
   Check, 
-  HelpCircle 
+  HelpCircle,
+  Menu
 } from 'lucide-react';
 import { getSettings, saveSettings, resetDb } from '../utils/db';
 import './Settings.css';
 
-const Settings = () => {
+const Settings = ({ setMobileOpen }) => {
   const [apiKey, setApiKey] = useState('');
   const [provider, setProvider] = useState('openai');
   const [model, setModel] = useState('gpt-4o-mini');
   const [theme, setTheme] = useState('dark');
   const [showKey, setShowKey] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [customEndpoint, setCustomEndpoint] = useState('http://localhost:11434/v1');
 
   // Load settings on mount
   useEffect(() => {
@@ -28,6 +30,7 @@ const Settings = () => {
     setProvider(setts.provider || 'openai');
     setModel(setts.model || 'gpt-4o-mini');
     setTheme(setts.theme || 'dark');
+    setCustomEndpoint(setts.customEndpoint || 'http://localhost:11434/v1');
   }, []);
 
   // Sync available models based on selected provider
@@ -48,6 +51,17 @@ const Settings = () => {
           { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash' },
           { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash' },
           { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro' }
+        ];
+      case 'local':
+        return [
+          { id: 'gemma2', name: 'Gemma 2 (Recommended)' },
+          { id: 'gemma:2b', name: 'Gemma 2B (Lightweight)' },
+          { id: 'llama3', name: 'Llama 3' },
+          { id: 'mistral', name: 'Mistral' }
+        ];
+      case 'windowAI':
+        return [
+          { id: 'window-ai', name: 'Chrome built-in Gemini Nano' }
         ];
       default:
         return [];
@@ -70,8 +84,13 @@ const Settings = () => {
       apiKey: apiKey.trim(),
       provider,
       model,
-      theme
+      theme,
+      customEndpoint: customEndpoint.trim()
     });
+
+    // Read back healed settings to refresh UI state
+    const healed = getSettings();
+    setApiKey(healed.apiKey || '');
 
     // Apply theme immediately
     document.documentElement.setAttribute('data-theme', theme);
@@ -87,7 +106,8 @@ const Settings = () => {
       apiKey: apiKey.trim(),
       provider,
       model,
-      theme: selectedTheme
+      theme: selectedTheme,
+      customEndpoint: customEndpoint.trim()
     });
   };
 
@@ -104,6 +124,9 @@ const Settings = () => {
     <div className="settings-view">
       <header className="settings-header">
         <div className="header-left">
+          <button type="button" className="mobile-menu-trigger" onClick={() => setMobileOpen(true)}>
+            <Menu size={20} />
+          </button>
           <SettingsIcon size={20} className="logo-icon" />
           <h2>Settings</h2>
         </div>
@@ -153,6 +176,8 @@ const Settings = () => {
                 <option value="openai">OpenAI (ChatGPT)</option>
                 <option value="anthropic">Anthropic (Claude)</option>
                 <option value="gemini">Google Gemini</option>
+                <option value="local">Local API (Ollama, LM Studio)</option>
+                <option value="windowAI">Chrome built-in AI (Gemini Nano)</option>
               </select>
             </div>
 
@@ -170,20 +195,22 @@ const Settings = () => {
             </div>
 
             <div className="settings-group">
-              <label htmlFor="key">API Key</label>
+              <label htmlFor="key">API Key { (provider === 'local' || provider === 'windowAI') && '(Optional)' }</label>
               <div className="api-key-input-wrapper">
                 <Key size={14} className="key-icon" />
                 <input
                   id="key"
                   type={showKey ? 'text' : 'password'}
-                  placeholder={`Enter your ${provider.toUpperCase()} API key...`}
+                  placeholder={provider === 'local' || provider === 'windowAI' ? 'Optional for local AI' : `Enter your ${provider.toUpperCase()} API key...`}
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
+                  disabled={provider === 'windowAI'}
                 />
                 <button 
                   type="button" 
                   className="show-key-btn"
                   onClick={() => setShowKey(!showKey)}
+                  disabled={provider === 'windowAI'}
                 >
                   {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -193,6 +220,35 @@ const Settings = () => {
                 Keys are stored only in your local browser storage.
               </span>
             </div>
+
+            {provider === 'local' && (
+              <div className="settings-group">
+                <label htmlFor="customEndpoint">Local Base URL</label>
+                <input
+                  id="customEndpoint"
+                  type="text"
+                  placeholder="e.g. http://localhost:11434/v1"
+                  value={customEndpoint}
+                  onChange={(e) => setCustomEndpoint(e.target.value)}
+                />
+                <span className="api-key-help">
+                  <HelpCircle size={10} />
+                  Ollama default is http://localhost:11434/v1. LM Studio is http://localhost:1234/v1.
+                </span>
+              </div>
+            )}
+
+            {provider === 'windowAI' && (
+              <div className="settings-group" style={{ backgroundColor: 'var(--bg-sidebar)', padding: '12px', borderRadius: 'var(--border-radius-sm)', border: '1px solid var(--border-color)' }}>
+                <p style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '6px' }}>How to enable Chrome built-in Gemini Nano:</p>
+                <ol style={{ marginLeft: '16px', fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <li>Open Chrome and go to: <code>chrome://flags/#optimization-guide-on-device-model</code></li>
+                  <li>Set it to <strong>Enabled BypassPrefRequiredLimit</strong></li>
+                  <li>Go to: <code>chrome://flags/#prompt-api-for-gemini-nano</code> and set to <strong>Enabled</strong></li>
+                  <li>Relaunch Chrome and let it download the model (check <code>chrome://components</code> "Optimization Guide On Device Model").</li>
+                </ol>
+              </div>
+            )}
 
             <button type="submit" className="save-settings-btn">
               {savedSuccess ? (
